@@ -1,3 +1,3 @@
-module github.com/rusrom/go-todo
+module github.com/rusrom/yt-todo
 
 go 1.20

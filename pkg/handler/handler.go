@@ -1,8 +1,16 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/rusrom/yt-todo/pkg/service"
+)
 
 type TodoHandler struct {
+	services *service.TodoService
+}
+
+func NewTodoHandler(services *service.TodoService) *TodoHandler {
+	return &TodoHandler{services: services}
 }
 
 func (h *TodoHandler) InitRoutes() *gin.Engine {
@@ -13,7 +21,6 @@ func (h *TodoHandler) InitRoutes() *gin.Engine {
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
 	}
-
 	api := router.Group("/api")
 	{
 		list := api.Group("/list")

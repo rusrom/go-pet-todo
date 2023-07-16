@@ -2,13 +2,15 @@ package main
 
 import (
 	todo "github.com/rusrom/yt-todo"
+	"github.com/rusrom/yt-todo/pkg/handler"
 	"log"
 )
 
 func main() {
-	srv := new(todo.Server)
+	handlers := new(handler.TodoHandler)
 
-	if err := srv.Run("8080"); err != nil {
+	srv := new(todo.Server)
+	if err := srv.Run("8080", handlers.InitRoutes()); err != nil {
 		log.Fatalf("Error while running web server: %s", err.Error())
 	}
 }

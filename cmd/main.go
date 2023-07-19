@@ -7,18 +7,20 @@ import (
 	"github.com/rusrom/yt-todo/pkg/handler"
 	"github.com/rusrom/yt-todo/pkg/repository"
 	"github.com/rusrom/yt-todo/pkg/service"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 )
 
 func main() {
+	//logrus.SetFormatter(new(logrus.JSONFormatter))
+
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("error loading environment variables: %s", err.Error())
+		logrus.Fatalf("error loading environment variables: %s", err.Error())
 	}
 
 	if err := initConfig(); err != nil {
-		log.Fatalf("error initialization config %s", err.Error())
+		logrus.Fatalf("error initialization config %s", err.Error())
 	}
 
 	db, err := repository.NewDb(repository.DbConfig{
@@ -26,11 +28,11 @@ func main() {
 		Port:     os.Getenv("DB_PORT"),
 		Username: os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
-		Database: os.Getenv("DB_NAME"),
+		Database: os.Getenv("DB_NAME_"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {
-		log.Fatalf("fail to initialize database: %s", err.Error())
+		logrus.Fatalf("fail to initialize database: %s", err.Error())
 	}
 
 	repos := repository.NewTodoRepository(db)
@@ -39,7 +41,7 @@ func main() {
 
 	srv := new(todo.Server)
 	if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
-		log.Fatalf("Error while running web server: %s", err.Error())
+		logrus.Fatalf("Error while running web server: %s", err.Error())
 	}
 }
 

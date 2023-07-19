@@ -1,5 +1,7 @@
 package repository
 
+import "github.com/jmoiron/sqlx"
+
 type UserAuthorization interface {
 }
 
@@ -15,6 +17,6 @@ type TodoRepository struct {
 	TodoItemProcessing
 }
 
-func NewTodoRepository() *TodoRepository {
+func NewTodoRepository(db *sqlx.DB) *TodoRepository {
 	return &TodoRepository{}
 }

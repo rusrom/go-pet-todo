@@ -1,2 +1,4 @@
 .idea/
-/snipets.txt
+snipets.txt
+.env
+.envrc

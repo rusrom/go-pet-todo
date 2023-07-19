@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	todo "github.com/rusrom/yt-todo"
 	"github.com/rusrom/yt-todo/pkg/handler"
@@ -8,19 +9,24 @@ import (
 	"github.com/rusrom/yt-todo/pkg/service"
 	"github.com/spf13/viper"
 	"log"
+	"os"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("error loading environment variables: %s", err.Error())
+	}
+
 	if err := initConfig(); err != nil {
 		log.Fatalf("error initialization config %s", err.Error())
 	}
 
 	db, err := repository.NewDb(repository.DbConfig{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		Username: viper.GetString("db.username"),
-		Password: viper.GetString("db.password"),
-		Database: viper.GetString("db.database"),
+		Host:     os.Getenv("DB_HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		Username: os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		Database: os.Getenv("DB_NAME"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {

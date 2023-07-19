@@ -1,8 +1,12 @@
 package service
 
-import "github.com/rusrom/yt-todo/pkg/repository"
+import (
+	todo "github.com/rusrom/yt-todo"
+	"github.com/rusrom/yt-todo/pkg/repository"
+)
 
 type UserAuthorization interface {
+	CreateUser(u todo.User) (int, error)
 }
 
 type TodoListProcessing interface {
@@ -18,5 +22,9 @@ type TodoService struct {
 }
 
 func NewTodoService(r *repository.TodoRepository) *TodoService {
-	return &TodoService{}
+	return &TodoService{
+		UserAuthorization: NewAuthService(r.UserAuthorization),
+		//TodoListProcessing: nil,
+		//TodoItemProcessing: nil,
+	}
 }

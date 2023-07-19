@@ -28,7 +28,7 @@ func main() {
 		Port:     os.Getenv("DB_PORT"),
 		Username: os.Getenv("DB_USER"),
 		Password: os.Getenv("DB_PASSWORD"),
-		Database: os.Getenv("DB_NAME_"),
+		Database: os.Getenv("DB_NAME"),
 		SSLMode:  viper.GetString("db.sslmode"),
 	})
 	if err != nil {

@@ -1,8 +1,12 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+	todo "github.com/rusrom/yt-todo"
+)
 
 type UserAuthorization interface {
+	CreateUser(u todo.User) (int, error)
 }
 
 type TodoListProcessing interface {
@@ -18,5 +22,9 @@ type TodoRepository struct {
 }
 
 func NewTodoRepository(db *sqlx.DB) *TodoRepository {
-	return &TodoRepository{}
+	return &TodoRepository{
+		UserAuthorization: NewAuthRepo(db),
+		//TodoListProcessing: nil,
+		//TodoItemProcessing: nil,
+	}
 }

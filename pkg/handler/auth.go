@@ -8,6 +8,7 @@ import (
 
 func (h *TodoHandler) signUp(c *gin.Context) {
 	var newUser todo.User
+
 	err := c.BindJSON(&newUser)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())

@@ -23,3 +23,10 @@ func (r *AuthRepo) CreateUser(u todo.User) (int, error) {
 	}
 	return id, nil
 }
+
+func (r *AuthRepo) GetUser(username, password string) (todo.User, error) {
+	var user todo.User
+	query := fmt.Sprintf("SELECT * FROM %s WHERE username=$1 AND password=$2", usersTable)
+	err := r.db.Get(&user, query, username, password)
+	return user, err
+}

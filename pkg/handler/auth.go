@@ -17,7 +17,8 @@ func (h *TodoHandler) signUp(c *gin.Context) {
 
 	id, err := h.services.CreateUser(newUser)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		//newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "such username already exists")
 		return
 	}
 
@@ -25,6 +26,24 @@ func (h *TodoHandler) signUp(c *gin.Context) {
 		"id": id,
 	})
 }
-func (h *TodoHandler) signIn(c *gin.Context) {
 
+func (h *TodoHandler) signIn(c *gin.Context) {
+	var userCredentials todo.SignInInput
+
+	err := c.BindJSON(&userCredentials)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	token, err := h.services.GenerateJWT(userCredentials)
+	if err != nil {
+		//newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "not valid credentials")
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"token": token,
+	})
 }

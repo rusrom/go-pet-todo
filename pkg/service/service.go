@@ -12,6 +12,7 @@ type UserAuthorization interface {
 }
 
 type TodoListProcessing interface {
+	CreateNewList(l todo.ListTodo, userId int) (int, error)
 }
 
 type TodoItemProcessing interface {
@@ -25,8 +26,8 @@ type TodoService struct {
 
 func NewTodoService(r *repository.TodoRepository) *TodoService {
 	return &TodoService{
-		UserAuthorization: NewAuthService(r.UserAuthorization),
-		//TodoListProcessing: nil,
+		UserAuthorization:  NewAuthService(r.UserAuthorization),
+		TodoListProcessing: NewTodoListService(r.TodoListProcessing),
 		//TodoItemProcessing: nil,
 	}
 }

@@ -8,6 +8,7 @@ import (
 type UserAuthorization interface {
 	CreateUser(u todo.User) (int, error)
 	GenerateJWT(u todo.SignInInput) (string, error)
+	ParseJWT(tokenString string) (int, error)
 }
 
 type TodoListProcessing interface {

@@ -81,5 +81,24 @@ func (h *TodoHandler) editList(c *gin.Context) {
 }
 
 func (h *TodoHandler) deleteList(c *gin.Context) {
+	userId, err := getAuthUserId(c)
+	if err != nil {
+		return
+	}
 
+	listId, err := strconv.Atoi(c.Param("list_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid list_id url path param")
+		return
+	}
+
+	err = h.services.DeleteList(listId, userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusNotFound, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{
+		Status: "deleted",
+	})
 }

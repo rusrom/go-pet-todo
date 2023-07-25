@@ -14,6 +14,7 @@ type TodoListProcessing interface {
 	CreateNewList(l todo.ListTodo, userId int) (int, error)
 	GetAllUserLists(userId int) ([]todo.ListTodo, error)
 	GetListDetail(listId int, userId int) (todo.ListTodo, error)
+	DeleteList(listId int, userId int) error
 }
 
 type TodoItemProcessing interface {

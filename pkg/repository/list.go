@@ -60,3 +60,12 @@ func (r *TodoListRepo) GetListDetail(listId int, userId int) (todo.ListTodo, err
 
 	return listDetail, err
 }
+
+func (r *TodoListRepo) DeleteList(listId int, userId int) error {
+	query := fmt.Sprintf("DELETE FROM %s l USING %s ul WHERE l.id = ul.list_id AND l.id = $1 AND ul.user_id = $2",
+		listsTable,
+		usersListsTable,
+	)
+	_, err := r.db.Exec(query, listId, userId)
+	return err
+}

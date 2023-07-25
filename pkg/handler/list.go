@@ -77,7 +77,32 @@ func (h *TodoHandler) getList(c *gin.Context) {
 }
 
 func (h *TodoHandler) editList(c *gin.Context) {
+	userId, err := getAuthUserId(c)
+	if err != nil {
+		return
+	}
 
+	listId, err := strconv.Atoi(c.Param("list_id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "invalid list_id url path param")
+		return
+	}
+
+	var updatedData todo.UpdateListData
+	if err = c.BindJSON(&updatedData); err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "provide correct json in body")
+		return
+	}
+
+	err = h.services.UpdateListData(listId, userId, &updatedData)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{
+		Status: "updated",
+	})
 }
 
 func (h *TodoHandler) deleteList(c *gin.Context) {

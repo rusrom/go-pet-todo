@@ -36,3 +36,10 @@ func (s *TodoListService) GetListDetail(listId int, userId int) (todo.ListTodo, 
 func (s *TodoListService) DeleteList(listId int, userId int) error {
 	return s.repo.DeleteList(listId, userId)
 }
+
+func (s *TodoListService) UpdateListData(listId int, userId int, updatedData *todo.UpdateListData) error {
+	if err := updatedData.ValidateFields(); err != nil {
+		return err
+	}
+	return s.repo.UpdateListData(listId, userId, updatedData)
+}

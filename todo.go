@@ -1,5 +1,7 @@
 package todo
 
+import "errors"
+
 type ListTodo struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" db:"title" binding:"required"`
@@ -23,4 +25,16 @@ type ItemList struct {
 	Id     int
 	ListId string
 	ItemId string
+}
+
+type UpdateListData struct {
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+}
+
+func (d *UpdateListData) ValidateFields() error {
+	if d.Title == nil && d.Description == nil {
+		return errors.New("update data consists only from nil values")
+	}
+	return nil
 }

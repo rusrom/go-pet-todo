@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	todo "github.com/rusrom/yt-todo"
+	"strings"
 )
 
 type TodoListRepo struct {
@@ -67,5 +68,34 @@ func (r *TodoListRepo) DeleteList(listId int, userId int) error {
 		usersListsTable,
 	)
 	_, err := r.db.Exec(query, listId, userId)
+	return err
+}
+
+func (r *TodoListRepo) UpdateListData(listId int, userId int, updatedData *todo.UpdateListData) error {
+	setVals := make([]string, 0)
+	args := make([]interface{}, 0)
+	argPosition := 1
+
+	if updatedData.Title != nil {
+		setVals = append(setVals, fmt.Sprintf("title=$%d", argPosition))
+		args = append(args, *updatedData.Title)
+		argPosition++
+	}
+
+	if updatedData.Description != nil {
+		setVals = append(setVals, fmt.Sprintf("description=$%d", argPosition))
+		args = append(args, *updatedData.Description)
+		argPosition++
+	}
+
+	setPart := strings.Join(setVals, ", ")
+
+	args = append(args, listId, userId)
+
+	query := fmt.Sprintf(
+		"UPDATE %s l SET %s FROM %s ul WHERE l.id=ul.list_id AND ul.list_id=$%d AND ul.user_id=$%d",
+		listsTable, setPart, usersListsTable, argPosition, argPosition+1,
+	)
+	_, err := r.db.Exec(query, args...)
 	return err
 }

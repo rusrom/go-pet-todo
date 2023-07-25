@@ -8,8 +8,25 @@ import (
 	"net/http"
 )
 
-func (h *TodoHandler) getAllLists(c *gin.Context) {
+type allTodoLists struct {
+	Data []todo.ListTodo
+}
 
+func (h *TodoHandler) getAllLists(c *gin.Context) {
+	userId, err := getAuthUserId(c)
+	if err != nil {
+		return
+	}
+
+	allUserLists, err := h.services.GetAllUserLists(userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, allTodoLists{
+		Data: allUserLists,
+	})
 }
 
 func (h *TodoHandler) createList(c *gin.Context) {

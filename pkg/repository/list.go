@@ -37,3 +37,14 @@ func (r *TodoListRepo) CreateNewList(l todo.ListTodo, userId int) (int, error) {
 
 	return id, trx.Commit()
 }
+
+func (r *TodoListRepo) GetAllUserLists(userId int) ([]todo.ListTodo, error) {
+	var todoLists []todo.ListTodo
+	query := fmt.Sprintf(
+		"SELECT tl.id, tl.title, tl.description FROM %s tl INNER JOIN %s ul ON tl.id = ul.list_id WHERE ul.user_id = $1 ORDER BY tl.id",
+		listsTable,
+		usersListsTable,
+	)
+	err := r.db.Select(&todoLists, query, userId)
+	return todoLists, err
+}

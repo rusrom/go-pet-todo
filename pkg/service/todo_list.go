@@ -28,3 +28,7 @@ func (s *TodoListService) GetAllUserLists(userId int) ([]todo.ListTodo, error) {
 	}
 	return lists, nil
 }
+
+func (s *TodoListService) GetListDetail(listId int, userId int) (todo.ListTodo, error) {
+	return s.repo.GetListDetail(listId, userId)
+}

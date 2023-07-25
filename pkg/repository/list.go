@@ -48,3 +48,15 @@ func (r *TodoListRepo) GetAllUserLists(userId int) ([]todo.ListTodo, error) {
 	err := r.db.Select(&todoLists, query, userId)
 	return todoLists, err
 }
+
+func (r *TodoListRepo) GetListDetail(listId int, userId int) (todo.ListTodo, error) {
+	var listDetail todo.ListTodo
+
+	query := fmt.Sprintf("SELECT l.id, l.title, l.description FROM %s l INNER JOIN %s ul ON l.id = ul.list_id WHERE l.id = $1 AND user_id = $2",
+		listsTable,
+		usersListsTable,
+	)
+	err := r.db.Get(&listDetail, query, listId, userId)
+
+	return listDetail, err
+}

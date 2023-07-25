@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	todo "github.com/rusrom/yt-todo"
+	"strconv"
 
 	//todo "github.com/rusrom/yt-todo"
 	"net/http"
@@ -54,7 +55,25 @@ func (h *TodoHandler) createList(c *gin.Context) {
 }
 
 func (h *TodoHandler) getList(c *gin.Context) {
+	userId, err := getAuthUserId(c)
+	if err != nil {
+		return
+	}
 
+	listId, err := strconv.Atoi(c.Param("list_id"))
+	if err != nil {
+		//newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid list_id url path param")
+		return
+	}
+
+	listDetail, err := h.services.GetListDetail(listId, userId)
+	if err != nil {
+		newErrorResponse(c, http.StatusNotFound, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, listDetail)
 }
 
 func (h *TodoHandler) editList(c *gin.Context) {

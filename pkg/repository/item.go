@@ -37,3 +37,21 @@ func (r *TodoItemRepo) CreateNewItem(i todo.ItemTodo, listId int) (int, error) {
 
 	return id, trx.Commit()
 }
+
+func (r *TodoItemRepo) GetListItems(listId int, userId int) ([]todo.ItemTodo, error) {
+	var listItems []todo.ItemTodo
+	query := fmt.Sprintf(
+		`SELECT i.id, i.title, i.description, i.done FROM %s i 
+    			INNER JOIN %s li ON i.id = li.item_id
+    			INNER JOIN %s ul ON li.list_id = ul.list_id
+                WHERE li.list_id = $1 AND ul.user_id = $2
+                ORDER BY i.id`,
+		itemsTable,
+		listsItemsTable,
+		usersListsTable,
+	)
+	if err := r.db.Select(&listItems, query, listId, userId); err != nil {
+		return nil, err
+	}
+	return listItems, nil
+}

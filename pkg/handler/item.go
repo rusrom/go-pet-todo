@@ -7,8 +7,30 @@ import (
 	"strconv"
 )
 
-func (h *TodoHandler) getAllItems(c *gin.Context) {
+type listAllItems struct {
+	Data []todo.ItemTodo `json:"data"`
+}
 
+func (h *TodoHandler) getAllItems(ctx *gin.Context) {
+	userId, err := getAuthUserId(ctx)
+	if err != nil {
+		return
+	}
+
+	listId, err := strconv.Atoi(ctx.Param("list_id"))
+	if err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid list_id url path param")
+		return
+	}
+
+	listItems, err := h.services.GetListItems(listId, userId)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+	ctx.JSON(http.StatusOK, listAllItems{
+		Data: listItems,
+	})
 }
 
 func (h *TodoHandler) createItem(ctx *gin.Context) {
@@ -32,7 +54,7 @@ func (h *TodoHandler) createItem(ctx *gin.Context) {
 
 	id, err := h.services.TodoItemProcessing.CreateNewItem(newItem, listId, userId)
 	if err != nil {
-		newErrorResponse(ctx, http.StatusBadRequest, "todo list doesnt exists or you are not an owner of this todo list")
+		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 

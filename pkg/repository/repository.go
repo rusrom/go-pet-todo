@@ -19,6 +19,7 @@ type TodoListProcessing interface {
 }
 
 type TodoItemProcessing interface {
+	CreateNewItem(i todo.ItemTodo, listId int) (int, error)
 }
 
 type TodoRepository struct {
@@ -31,6 +32,6 @@ func NewTodoRepository(db *sqlx.DB) *TodoRepository {
 	return &TodoRepository{
 		UserAuthorization:  NewAuthRepo(db),
 		TodoListProcessing: NewTodoListRepo(db),
-		//TodoItemProcessing: nil,
+		TodoItemProcessing: NewTodoItemRepo(db),
 	}
 }

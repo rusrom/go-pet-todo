@@ -23,6 +23,7 @@ type TodoItemProcessing interface {
 	CreateNewItem(i todo.ItemTodo, listId int, userId int) (int, error)
 	GetListItems(listId int, userId int) ([]todo.ItemTodo, error)
 	GetItemDetail(itemId int, userId int) (todo.ItemTodo, error)
+	DeleteItem(itemId int, userId int) error
 }
 
 type TodoService struct {

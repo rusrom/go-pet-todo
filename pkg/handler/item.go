@@ -89,6 +89,24 @@ func (h *TodoHandler) editItem(c *gin.Context) {
 
 }
 
-func (h *TodoHandler) deleteItem(c *gin.Context) {
+func (h *TodoHandler) deleteItem(ctx *gin.Context) {
+	userId, err := getAuthUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	itemId, err := strconv.Atoi(ctx.Param("item_id"))
+	if err != nil {
+		//newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid item_id url path param")
+		return
+	}
+
+	err = h.services.TodoItemProcessing.DeleteItem(itemId, userId)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, statusResponse{Status: "deleted"})
 }

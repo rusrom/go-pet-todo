@@ -71,3 +71,17 @@ func (r *TodoItemRepo) GetItemDetail(itemId int, userId int) (todo.ItemTodo, err
 	err := r.db.Get(&listItem, query, itemId, userId)
 	return listItem, err
 }
+
+func (r *TodoItemRepo) DeleteItem(itemId int, userId int) error {
+	query := fmt.Sprintf(
+		`DELETE FROM %s i
+       			USING %s li, %s ul
+				WHERE i.id = li.item_id AND li.list_id = ul.list_id AND li.item_id = $1 AND ul.user_id = $2`,
+		itemsTable,
+		listsItemsTable,
+		usersListsTable,
+	)
+	_, err := r.db.Exec(query, itemId, userId)
+
+	return err
+}

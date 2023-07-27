@@ -21,6 +21,7 @@ type TodoListProcessing interface {
 type TodoItemProcessing interface {
 	CreateNewItem(i todo.ItemTodo, listId int) (int, error)
 	GetListItems(listId int, userId int) ([]todo.ItemTodo, error)
+	GetItemDetail(itemId int, userId int) (todo.ItemTodo, error)
 }
 
 type TodoRepository struct {

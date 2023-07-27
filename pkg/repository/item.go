@@ -55,3 +55,19 @@ func (r *TodoItemRepo) GetListItems(listId int, userId int) ([]todo.ItemTodo, er
 	}
 	return listItems, nil
 }
+
+func (r *TodoItemRepo) GetItemDetail(itemId int, userId int) (todo.ItemTodo, error) {
+	var listItem todo.ItemTodo
+	query := fmt.Sprintf(
+		`SELECT i.id, i.title, i.description, i.done FROM %s i
+    			INNER JOIN %s li ON i.id = li.item_id
+				INNER JOIN %s ul ON li.list_id = ul.list_id
+				WHERE i.id = $1 AND ul.user_id = $2`,
+		itemsTable,
+		listsItemsTable,
+		usersListsTable,
+	)
+
+	err := r.db.Get(&listItem, query, itemId, userId)
+	return listItem, err
+}

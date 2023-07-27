@@ -63,8 +63,26 @@ func (h *TodoHandler) createItem(ctx *gin.Context) {
 	})
 }
 
-func (h *TodoHandler) getItem(c *gin.Context) {
+func (h *TodoHandler) getItem(ctx *gin.Context) {
+	userId, err := getAuthUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	itemId, err := strconv.Atoi(ctx.Param("item_id"))
+	if err != nil {
+		//newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(ctx, http.StatusBadRequest, "invalid item_id url path param")
+		return
+	}
+
+	itemDetail, err := h.services.TodoItemProcessing.GetItemDetail(itemId, userId)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusNotFound, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, itemDetail)
 }
 
 func (h *TodoHandler) editItem(c *gin.Context) {

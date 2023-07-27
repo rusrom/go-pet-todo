@@ -33,3 +33,7 @@ func (s *TodoItemService) GetListItems(listId int, userId int) ([]todo.ItemTodo,
 	}
 	return s.repoItem.GetListItems(listId, userId)
 }
+
+func (s *TodoItemService) GetItemDetail(itemId int, userId int) (todo.ItemTodo, error) {
+	return s.repoItem.GetItemDetail(itemId, userId)
+}

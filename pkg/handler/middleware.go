@@ -36,14 +36,16 @@ func (h *TodoHandler) userIdentity(c *gin.Context) {
 func getAuthUserId(ctx *gin.Context) (int, error) {
 	val, ok := ctx.Get(userCtx)
 	if !ok {
-		newErrorResponse(ctx, http.StatusUnauthorized, "user id not found")
-		return 0, errors.New("user id not found")
+		message := "user id not found in context"
+		newErrorResponse(ctx, http.StatusUnauthorized, message)
+		return 0, errors.New(message)
 	}
 
 	idInt, ok := val.(int)
 	if !ok {
-		newErrorResponse(ctx, http.StatusInternalServerError, "auth user id has invalid type")
-		return 0, errors.New("user id has invalid type")
+		message := "auth user id has invalid type"
+		newErrorResponse(ctx, http.StatusInternalServerError, message)
+		return 0, errors.New(message)
 	}
 
 	return idInt, nil

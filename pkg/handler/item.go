@@ -85,8 +85,33 @@ func (h *TodoHandler) getItem(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, itemDetail)
 }
 
-func (h *TodoHandler) editItem(c *gin.Context) {
+func (h *TodoHandler) editItem(ctx *gin.Context) {
+	userId, err := getAuthUserId(ctx)
+	if err != nil {
+		return
+	}
 
+	itemId, err := strconv.Atoi(ctx.Param("item_id"))
+	if err != nil {
+		//newErrorResponse(ctx, http.StatusBadRequest, "invalid item_id url path param")
+		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var updatedData todo.UpdateItemData
+	if err = ctx.BindJSON(&updatedData); err != nil {
+		//newErrorResponse(ctx, http.StatusBadRequest, "provide correct json in body")
+		newErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = h.services.TodoItemProcessing.UpdateItem(&updatedData, itemId, userId)
+	if err != nil {
+		newErrorResponse(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, statusResponse{Status: "updated"})
 }
 
 func (h *TodoHandler) deleteItem(ctx *gin.Context) {

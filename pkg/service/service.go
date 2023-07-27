@@ -24,6 +24,7 @@ type TodoItemProcessing interface {
 	GetListItems(listId int, userId int) ([]todo.ItemTodo, error)
 	GetItemDetail(itemId int, userId int) (todo.ItemTodo, error)
 	DeleteItem(itemId int, userId int) error
+	UpdateItem(updatedData *todo.UpdateItemData, itemId int, userId int) error
 }
 
 type TodoService struct {

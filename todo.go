@@ -38,3 +38,9 @@ func (d *UpdateListData) ValidateFields() error {
 	}
 	return nil
 }
+
+type UpdateItemData struct {
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
+	Done        *bool   `json:"done"`
+}

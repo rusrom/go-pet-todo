@@ -1,14 +1,17 @@
 db:
-	docker run --rm --name todo-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
-
-wait-db-up:
-	sleep 5
+	docker run --rm --name todo-db -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres;
+	sleep 4
 
 migrate-up:
 	migrate -path ./migration -database "postgres://postgres:mysecretpassword@localhost:5432/postgres?sslmode=disable" up
 
 migrate-down:
 	migrate -path ./migration -database "postgres://postgres:mysecretpassword@localhost:5432/postgres?sslmode=disable" down
+
+start-api:
+	go run cmd/main.go
+
+run: db migrate-up start-api
 
 user-1:
 	curl --request POST \
@@ -23,8 +26,3 @@ user-2:
       --data '{"name": "oksana", "username": "oksankag", "password": "123456789"}'
 
 new-users: user-1 user-2
-
-start-api:
-	go run cmd/main.go
-
-run: db wait-db-up migrate-up start-api

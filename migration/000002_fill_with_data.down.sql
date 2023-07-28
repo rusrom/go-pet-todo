@@ -1,0 +1,3 @@
+DELETE FROM items;
+DELETE FROM lists;
+DELETE FROM users;

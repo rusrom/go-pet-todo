@@ -13,6 +13,18 @@ type allTodoLists struct {
 	Data []todo.ListTodo
 }
 
+// @Summary Get All Lists
+// @Security ApiKeyAuth
+// @Tags lists
+// @Description get all lists
+// @ID get-all-lists
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} allTodoLists
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/list [get]
 func (h *TodoHandler) getAllLists(c *gin.Context) {
 	userId, err := getAuthUserId(c)
 	if err != nil {
@@ -30,6 +42,19 @@ func (h *TodoHandler) getAllLists(c *gin.Context) {
 	})
 }
 
+// @Summary Create todo list
+// @Security ApiKeyAuth
+// @Tags lists
+// @Description create todo list
+// @ID create-list
+// @Accept  json
+// @Produce  json
+// @Param input body todo.ListTodo true "list info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/list [post]
 func (h *TodoHandler) createList(c *gin.Context) {
 	userId, err := getAuthUserId(c)
 	if err != nil {
@@ -54,6 +79,18 @@ func (h *TodoHandler) createList(c *gin.Context) {
 	})
 }
 
+// @Summary Get List Detail
+// @Security ApiKeyAuth
+// @Tags lists
+// @Description get list by id
+// @ID get-list-by-id
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} todo.ListTodo
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/list/:list_id [get]
 func (h *TodoHandler) getList(c *gin.Context) {
 	userId, err := getAuthUserId(c)
 	if err != nil {

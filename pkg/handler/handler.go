@@ -3,6 +3,10 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/rusrom/yt-todo/pkg/service"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "github.com/rusrom/yt-todo/docs"
 )
 
 type TodoHandler struct {
@@ -15,6 +19,10 @@ func NewTodoHandler(services *service.TodoService) *TodoHandler {
 
 func (h *TodoHandler) InitRoutes() *gin.Engine {
 	router := gin.New()
+
+	// Swagger URL
+	// http://localhost:8080/swagger/index.html
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := router.Group("/auth")
 	{
